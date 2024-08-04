@@ -1,3 +1,5 @@
 config.ini
 
 .venv
+
+/combinations_rust/target
