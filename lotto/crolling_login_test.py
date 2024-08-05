@@ -73,9 +73,8 @@ def scrape_page(page_number):
         driver.execute_script("arguments[0].value = '2024-08-02';", calendar_input)
 
 
-        WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, f'a[onclick="selfSubmit({page_number})"]'))
-        ).click()
+        driver.execute_script(f"selfSubmit('{page_number}');")
+
         
         # Allow time for the page to load
         time.sleep(2)
