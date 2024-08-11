@@ -1,12 +1,14 @@
 import json
+
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+
 
 def prepare_data(wins_file):
     # Load the winning numbers from the JSON file
-    with open(wins_file, 'r') as file:
+    with open(wins_file, "r") as file:
         draws = json.load(file)
 
     # Prepare the dataset
@@ -14,8 +16,8 @@ def prepare_data(wins_file):
     y = []  # Labels: Numbers in the next draw
 
     for i in range(len(draws) - 1):
-        current_draw = draws[i]['numbers']
-        next_draw = draws[i + 1]['numbers']
+        current_draw = draws[i]["numbers"]
+        next_draw = draws[i + 1]["numbers"]
 
         # Convert numbers to a binary representation (1 if drawn, 0 otherwise)
         current_features = [1 if j in current_draw else 0 for j in range(1, 71)]
@@ -26,11 +28,14 @@ def prepare_data(wins_file):
 
     return np.array(X), np.array(y)
 
+
 def train_and_predict(wins_file, top_n=10):
     X, y = prepare_data(wins_file)
 
     # Split the data into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
 
     # Initialize the random forest classifier
     clf = RandomForestClassifier(n_estimators=100, random_state=42)
@@ -55,8 +60,9 @@ def train_and_predict(wins_file, top_n=10):
 
     return sorted(predicted_numbers)
 
+
 # Example usage
-wins_file = 'wins.json'
+wins_file = "wins.json"
 predicted_numbers = train_and_predict(wins_file)
 
 # Print the predicted top 10 numbers for the next draw

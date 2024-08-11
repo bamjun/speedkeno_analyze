@@ -1,9 +1,10 @@
 import json
-from collections import defaultdict, Counter
+from collections import Counter, defaultdict
+
 
 def find_top_combinations(wins_file, combination_size=10, top_n=3):
     # Load the winning numbers from the JSON file
-    with open(wins_file, 'r') as file:
+    with open(wins_file, "r") as file:
         draws = json.load(file)
 
     # Create a dictionary to count occurrences of each combination
@@ -12,8 +13,8 @@ def find_top_combinations(wins_file, combination_size=10, top_n=3):
 
     # Iterate through each draw and generate combinations
     for draw in draws:
-        numbers = draw['numbers']
-        
+        numbers = draw["numbers"]
+
         # Sort numbers to ensure combinations are in the same order
         numbers = sorted(numbers)
 
@@ -37,11 +38,14 @@ def find_top_combinations(wins_file, combination_size=10, top_n=3):
                 print(f"Rank {rank}: Combination {combination} appears {count} times.")
                 print("Draws with this combination:")
                 for draw in draw_map[combination]:
-                    print(f"Draw Date: {draw['draw_date']}, Draw Number: {draw['draw_number']}, Numbers: {draw['numbers']}, Sum: {draw['additional_info']}")
+                    print(
+                        f"Draw Date: {draw['draw_date']}, Draw Number: {draw['draw_number']}, Numbers: {draw['numbers']}, Sum: {draw['additional_info']}"
+                    )
                 print()
             else:
                 print(f"Rank {rank}: Combination {combination} appears {count} time.")
 
+
 # Example usage
-wins_file = 'wins.json'
+wins_file = "wins.json"
 find_top_combinations(wins_file)

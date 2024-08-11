@@ -1,12 +1,14 @@
 import json
+
 import numpy as np
 from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+
 
 def prepare_data(wins_file):
     # Load the winning numbers from the JSON file
-    with open(wins_file, 'r') as file:
+    with open(wins_file, "r") as file:
         draws = json.load(file)
 
     # Prepare the dataset
@@ -14,15 +16,21 @@ def prepare_data(wins_file):
     y = []  # Labels: Numbers in the next draw
 
     for i in range(len(draws) - 1):
-        current_draw = draws[i]['numbers']
-        next_draw = draws[i + 1]['numbers']
+        current_draw = draws[i]["numbers"]
+        next_draw = draws[i + 1]["numbers"]
 
         # Create features from the current draw
         current_features = [1 if j in current_draw else 0 for j in range(1, 71)]
 
         # Feature engineering: add patterns and sequential dependencies
         # 1. Count of consecutive numbers
-        consecutive_count = sum([1 for k in range(len(current_draw)-1) if current_draw[k] + 1 == current_draw[k+1]])
+        consecutive_count = sum(
+            [
+                1
+                for k in range(len(current_draw) - 1)
+                if current_draw[k] + 1 == current_draw[k + 1]
+            ]
+        )
         current_features.append(consecutive_count)
 
         # 2. Count of numbers in specific ranges
@@ -40,6 +48,7 @@ def prepare_data(wins_file):
 
     return np.array(X), np.array(y)
 
+
 def train_and_predict(wins_file, top_n=10):
     X, y = prepare_data(wins_file)
 
@@ -52,7 +61,9 @@ def train_and_predict(wins_file, top_n=10):
         y_current = y[:, number_index]
 
         # Split the data into training and testing sets
-        X_train, X_test, y_train, y_test = train_test_split(X, y_current, test_size=0.2, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y_current, test_size=0.2, random_state=42
+        )
 
         # Initialize the Gradient Boosting Classifier
         clf = GradientBoostingClassifier(n_estimators=100, random_state=42)
@@ -69,7 +80,9 @@ def train_and_predict(wins_file, top_n=10):
 
         # Predict the probability for the next draw based on the latest draw
         last_draw = X[-1].reshape(1, -1)  # Use the latest draw as input
-        probability = clf.predict_proba(last_draw)[0, 1]  # Probability of number being drawn
+        probability = clf.predict_proba(last_draw)[
+            0, 1
+        ]  # Probability of number being drawn
 
         predicted_numbers.append((number_index + 1, probability))
 
@@ -81,8 +94,9 @@ def train_and_predict(wins_file, top_n=10):
 
     return sorted(top_predicted_numbers)
 
+
 # Example usage
-wins_file = 'wins.json'
+wins_file = "wins.json"
 predicted_numbers = train_and_predict(wins_file)
 
 # Print the predicted top 10 numbers for the next draw

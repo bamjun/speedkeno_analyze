@@ -12,6 +12,8 @@ scikit-learn = "^1.5.1"
 selenium = "^4.23.1"
 beautifulsoup4 = "^4.12.3"
 webdriver-manager = "^4.0.2"
+black = "^24.8.0"
+isort = "^5.13.2"
 
 
 [build-system]
